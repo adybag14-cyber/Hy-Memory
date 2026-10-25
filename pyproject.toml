@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hy-memory"
-version = "2.0.5"
+version = "2.0.5+agent.1"
 description = "HY Memory - Industrial-grade dual-system cognitive memory framework"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -19,7 +19,7 @@ dependencies = [
     "openai>=1.40,<3",
     "python-dotenv",
     "pyyaml",
-    "chromadb>=1.5.9",
+    "chromadb @ git+https://github.com/adybag14-cyber/chroma.git@00c54a0164bc0d433d92bf956bebf2a0883d77dd",
     "kuzu",
     "langdetect",
     "scikit-learn",
@@ -40,7 +40,7 @@ graph = ["neo4j"]
 mysql = ["aiomysql"]
 rerank = ["torch", "transformers"]
 all = [
-    "chromadb>=1.5.9",
+    "chromadb @ git+https://github.com/adybag14-cyber/chroma.git@00c54a0164bc0d433d92bf956bebf2a0883d77dd",
     "qdrant-client",
     "fastembed",
     "faiss-cpu",

@@ -84,6 +84,9 @@ class ChromaVectorStore(VectorStoreBase):
             collection = client.get_or_create_collection(
                 name=self._collection_name,
                 metadata={"hnsw:space": "cosine"},
+                # HY Memory supplies vectors; persisted Chroma configuration
+                # must not select or load an embedding model on its behalf.
+                embedding_function=None,
             )
             return client, collection
 
@@ -652,6 +655,7 @@ class ChromaVectorStore(VectorStoreBase):
             return self._client.get_or_create_collection(
                 name=name,
                 metadata={"hnsw:space": "cosine"},
+                embedding_function=None,
             )
 
         self._entity_collection = await _run_in_vdb_pool(_init)
