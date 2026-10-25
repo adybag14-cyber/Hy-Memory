@@ -4,10 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hy-memory"
-version = "2.0.5+agent.1"
+version = "2.0.5+agent.2"
 description = "HY Memory - Industrial-grade dual-system cognitive memory framework"
 readme = "README.md"
-requires-python = ">=3.9"
+# Matches the Agent host baseline and allows patched Pillow/filelock releases.
+requires-python = ">=3.11"
 license = "Apache-2.0"
 authors = [
     {name = "alvinfei"},
@@ -19,12 +20,12 @@ dependencies = [
     "openai>=1.40,<3",
     "python-dotenv",
     "pyyaml",
-    "chromadb @ git+https://github.com/adybag14-cyber/chroma.git@00c54a0164bc0d433d92bf956bebf2a0883d77dd",
+    "chromadb @ git+https://github.com/adybag14-cyber/chroma.git@8f60a3606141bf1b388e0df57faf4982580a9384",
     "kuzu",
     "langdetect",
     "scikit-learn",
     "tiktoken",
-    "json-repair",
+    "json-repair>=0.64.2",
     # Working 记忆（coding 链路）的事实层词面通道。rank_bm25 缺失时该通道
     # 静默降级为纯稠密（lexical.py 的 except 兜住，不报错）——功能缺失而非
     # 故障，线上不易察觉，所以进主依赖而不是 optional。
@@ -34,21 +35,23 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-qdrant = ["qdrant-client", "fastembed"]
+qdrant = ["qdrant-client", "fastembed", "pillow>=13.0.0"]
 faiss = ["faiss-cpu"]
 graph = ["neo4j"]
 mysql = ["aiomysql"]
-rerank = ["torch", "transformers"]
+rerank = ["torch", "transformers>=5.20.2", "fsspec>=2026.9.0"]
 all = [
-    "chromadb @ git+https://github.com/adybag14-cyber/chroma.git@00c54a0164bc0d433d92bf956bebf2a0883d77dd",
+    "chromadb @ git+https://github.com/adybag14-cyber/chroma.git@8f60a3606141bf1b388e0df57faf4982580a9384",
     "qdrant-client",
     "fastembed",
+    "pillow>=13.0.0",
     "faiss-cpu",
     "kuzu",
     "neo4j",
     "aiomysql",
     "torch",
-    "transformers",
+    "transformers>=5.20.2",
+    "fsspec>=2026.9.0",
 ]
 dev = [
     "pytest",
@@ -82,7 +85,7 @@ filterwarnings = [
 ]
 
 [tool.ruff]
-target-version = "py38"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = ["E4", "E7", "E9", "F"]
