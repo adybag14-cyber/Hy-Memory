@@ -21,3 +21,14 @@ patched Transformers line; Qdrant's embedding extra requires Pillow 13.
 The native Chroma closure is rebuilt from the pinned source, including its
 PyO3, TLS, XML, YAML and ZIP dependency repairs. All 19 focused HY Memory
 store/SDK cases pass against that rebuilt Linux wheel.
+
+MemHub's core also pins the patched SDK and Chroma by immutable Git commits,
+and its own lockfile is regenerated. Its runtime version declaration and
+lock-provenance regression agree with the source dependency. The selected
+offline SDK/network-policy/retrieval integration suite passes all 133 cases,
+including real Chroma storage and locally hashed embedding assets.
+
+The SDK and MemHub Python locks have zero high/critical OSV findings on
+25 October 2026. Chroma's Cargo audit retains lower-severity and unscored
+upstream reports; see its security note. These downstream package versions
+are not upstream PyPI releases.

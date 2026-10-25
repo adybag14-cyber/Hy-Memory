@@ -10,11 +10,11 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.141.1",
-    "filelock>=3.32.4",
-    # Public SDK version validated against MemHub's permission and recall contracts.
-    "hy-memory==2.0.5.dev3",
+    "filelock>=4.2.4,<5",
+    # Reviewed SDK source validated against MemHub's permission and recall contracts.
+    "hy-memory @ git+https://github.com/adybag14-cyber/Hy-Memory.git@8008f618ee375fced30c1c31dcf3947935b06a57",
     # Retrieval's derived vector index directly consumes these locked versions.
-    "chromadb==1.5.9",
+    "chromadb @ git+https://github.com/adybag14-cyber/chroma.git@8f60a3606141bf1b388e0df57faf4982580a9384",
     "numpy==2.5.2",
     "httpx>=0.28.1",
     "keyring>=25.7.0",

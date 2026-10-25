@@ -2,6 +2,7 @@
 
 import logging
 import re
+import tomllib
 from pathlib import Path
 
 from one_memory.hy_runtime_config import (
@@ -19,15 +20,23 @@ def test_the_installed_sdk_is_the_pinned_one():
     assert HY_MEMORY_DISTRIBUTION == "hy-memory"
 
 
-def test_the_pin_matches_the_lock_file_and_its_wheel():
-    lock = (DOCUMENT.parent / "apps/core/uv.lock").read_text(encoding="utf-8")
-    assert re.search(
-        rf'\[\[package\]\]\nname = "{HY_MEMORY_DISTRIBUTION}"\n'
-        rf'version = "{HY_MEMORY_VERSION}"',
-        lock,
+def test_the_pin_matches_the_locked_source_commit():
+    core = DOCUMENT.parent / "apps/core"
+    lock = tomllib.loads((core / "uv.lock").read_text(encoding="utf-8"))
+    project = tomllib.loads((core / "pyproject.toml").read_text(encoding="utf-8"))
+    requirement = next(
+        value
+        for value in project["project"]["dependencies"]
+        if value.startswith(f"{HY_MEMORY_DISTRIBUTION} @ git+")
     )
-    assert f"hy_memory-{HY_MEMORY_VERSION}-" in lock
-    assert f'specifier = "=={HY_MEMORY_VERSION}"' in lock
+    source, commit = requirement.split(" @ git+", 1)[1].rsplit("@", 1)
+    assert re.fullmatch(r"[0-9a-f]{40}", commit)
+    assert source == "https://github.com/adybag14-cyber/Hy-Memory.git"
+    package = next(
+        value for value in lock["package"] if value["name"] == HY_MEMORY_DISTRIBUTION
+    )
+    assert package["version"] == HY_MEMORY_VERSION
+    assert package["source"] == {"git": f"{source}?rev={commit}#{commit}"}
 
 
 def test_info_level_suppresses_noisy_third_party_success_logs():
